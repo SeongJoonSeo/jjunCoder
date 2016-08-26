@@ -12,58 +12,79 @@ AC
 
 #include <iostream>
 #include <deque>
-#include <algorithm>
 #include <string>
-#include <cmath>
 
 using namespace std;
 
 int main() {
-	int t, n, m, input;
-	bool pushFront = true;
-	char c;
-	string p;
+	int t;
 	cin.sync_with_stdio(false);
 	cin >> t;	
 	
 	for (int i = 0; i < t; i++) {
-		int num = 0, radix = 0;
+		int num = 0, radix = 0, n, m, input;
+		bool mode = true;
+		char c;
 		deque<int> deq;		
+		string p;
 		cin >> p >> n;
-		scanf("%c", &c);// '['소거
+
+		cin >> c;// '['소거
 		while (c != ']') {
 			if (n == 0) {
-				scanf("%c", &c);// ']'소거
+				cin >> c;// ']'소거
 				break;
 			}				
-			scanf("%d", &input);
+			cin >> input;
 			deq.push_back(input);
-			scanf("%c", &c);// ','소거
+			cin >> c;// ','소거
 		}
-		
-		for (int i = 0; i < p.size(); i++) {
-			if (p[i] == 'R') {
-				reverse(deq.begin(), deq.end());
-			}
-			else if (p[i] == 'D') {
-				if (deq.empty()) {
-					cout << "error" << endl;
-					break;
+
+		//p 명령어를 본다.
+		for (int j = 0; j < p.size(); j++) {
+			if (p[j] == 'R')
+				mode = !mode;			
+			else {// D
+				if (mode) {
+					if (deq.empty()) {
+						printf("error");
+						break;
+					}
+					else
+						deq.pop_front();
 				}
-				else
-					deq.pop_front();
+				else {
+					if (deq.empty()) {
+						printf("error");
+						break;
+					}
+					else
+						deq.pop_back();
+				}
 			}
 		}
+
+		m = deq.size();
 		if (!deq.empty()) {
-			m = deq.size();
-			printf("[");
-			for (int i = 0; i < m - 1; i++) {
-				printf("%d,", deq.front());
-				deq.pop_front();
+			if (mode) {
+				printf("[");				
+				for (int j = 0; j < m - 1; j++) {
+					printf("%d,", deq.front());
+					deq.pop_front();
+				}
+				printf("%d]", deq.front());
 			}
-			printf("%d]\n", deq.front());
-			deq.pop_front();
-		}		
+			else {
+				printf("[");
+				for (int j = 0; j < m - 1; j++) {
+					printf("%d,", deq.back());
+					deq.pop_back();
+				}
+				printf("%d]", deq.back());
+			}
+		}
+		if (i != t - 1)
+			printf("\n");
 	}
 	return 0;
 }
