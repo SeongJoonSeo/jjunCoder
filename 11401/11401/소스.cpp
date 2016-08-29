@@ -12,6 +12,7 @@ Problem
 페르마의 소정리 개념을 적용시킨다.
 아래 코드는 https://www.acmicpc.net/blog/view/29 의 코드이다.
 */
+
 #include <iostream>
 using namespace std;
 long long mul(long long x, long long y, long long p) {
