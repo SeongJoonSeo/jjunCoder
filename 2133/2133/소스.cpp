@@ -18,21 +18,25 @@ using namespace std;
 vector<int> dp;
 
 int solve(int n) {
-	if (n % 2 != 0 || n < 0)
-		return 0;
-	if (n == 0) return 1;
-	int& ret = dp[n];
-	if (ret != -1) return ret;
-	return ret = solve(n - 4) * 2 + solve(n - 2) * 3;
+	int & ref = dp[n];
+	if (ref != -1) return ref;
+	if (n % 2 != 0) return ref = 0;
+	if (n == 0) return ref = 1;
+	if (n == 2) return ref = 3;
+
+	int ans = 0;
+	for (int i = 1; 2 * i <= n; i++) {
+		if (i == 1) ans += 3 * solve(n - 2 * i);
+		else ans += 2 * solve(n - 2 * i);
+	}
+	return ref = ans;
 }
 
 int main() {
 	int n;
 	cin.sync_with_stdio(false);
 	cin >> n;
-	dp.assign(n + 1, -1);
+	dp.assign(31, -1);
 	cout << solve(n);
-	/*for (int i = 1; i <= n; i++)
-		cout << i << ": " << solve(i) << endl;*/
 	return 0;
 }
