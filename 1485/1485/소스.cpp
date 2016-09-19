@@ -22,11 +22,20 @@ public:
 	Point(int a, int b) {
 		x = a; y = b;
 	}
-	Point middle(Point& other) {
+	Point middle(Point other) {
 		return Point((other.x + x) / 2, (other.y + y) / 2);
 	}
-	int sqlen(Point& other) {
+	int sqlen(Point other) {
 		return (other.x - x)*(other.x - x) + (other.y - y)*(other.y - y);
+	}
+	bool eq(Point other) {
+		return (x == other.x) && (y == other.y);
+	}
+	Point minus(Point other) {
+		return Point(other.x - x, other.y - y);
+	}
+	int product(Point other) {
+		return (other.x*x + other.y*y);
 	}
 };
 
@@ -36,17 +45,24 @@ int main() {
 	cin >> t;
 	for (int i = 0; i < t; i++) {
 		int x, y;
-		vector<Point> v;
+		vector<pair<int,int> > v;
+		vector<Point> pts;
 		for (int j = 0; j < 4; j++) {
 			cin >> x >> y;
-			v.push_back(Point(x,y));
+			v.push_back(make_pair(x,y));
 		}
-		vector<int> len;
-		for (int j = 0; j < v.size() - 1; j++) 
-			for (int k = j + 1; k < v.size(); k++) 
-				len.push_back(v[j].sqlen(v[k]));
-		sort(len.begin(), len.end());
-		
+		sort(v.begin(), v.end());
+		for (int j = 0; j < 4; j++)
+			pts.push_back(Point(v[j].first, v[j].second));
+		if (pts[0].middle(pts[3]).eq( pts[1].middle(pts[2]))) {
+			if (pts[0].sqlen(pts[3]) == pts[1].sqlen(pts[2])) {
+				if ((pts[3].minus( pts[0])).product((pts[2].minus( pts[1]))) == 0) {
+					cout << 1 << endl;
+					continue;
+				}
+			}
+		}
+		cout << 0 << endl;
 	}
 	return 0;
 }
