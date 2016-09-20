@@ -1,59 +1,77 @@
-﻿/*
-2016.9.20
-BaekJoon Online Judge
-Problem Solving
-
-Seong Joon Seo (ID: jjunCoder)
-
-Problem
-#5397
-키로거
-*/
-
-#include <iostream>
+﻿#include <iostream>
+#include <vector>
+#include <cmath>
 #include <string>
+#include <algorithm>
+#include <stack>
 
 using namespace std;
 
-int main() {
-	int t;
-	cin.sync_with_stdio(false);
-	cin >> t;
-	for (int i = 0; i < t; i++) {
-		string input,ret;
-		cin >> input;
-		auto it = input.begin();
-		auto it2 = ret.begin();
-		while ((*it) == '<' || (*it) == '>' || (*it) == '-')
-			it++;
-		for (it; it != input.end(); it++) {
-			if ((*it) == '<') {
-				if (it2 != ret.begin())
-					it2--;						
-			}				
-			else if ((*it) == '>') {
-				if (it2 != ret.end())
-					it2++;
-			}
-			else if ((*it) == '-') {
-				if (it2 != ret.begin()) {					
-					auto endIt = it2;
-					it2--;
-					while ((it + 1) != input.end() && (*(it + 1)) == '-') {
-						it++;
-						if (it2 != ret.begin())
-							it2--;
-					}
-					auto startIt = it2;
-					it2 = ret.erase(startIt,endIt);
-				}
-			}
+string ReverseString(const string src, int len)
+{
+	string reverse;
+
+	for (int i = 0; i < len; i++)
+		reverse += src.substr(len - i - 1, 1);
+
+	return reverse;
+}
+
+void solve(const string& str) {
+	stack<char> myStack, temp;
+	for (int i = 0; i < str.size(); i++) {
+		if (str[i] == '<') {
+			if (myStack.empty())
+				continue;
 			else {
-				it2 = ret.insert(it2, (*it));
-				it2++;
-			}	
+				temp.push(myStack.top());
+				myStack.pop();
+			}
 		}
-		printf("%s\n", ret.c_str());
+		else if (str[i] == '>') {
+			// if (myStack.empty())
+			// 	continue;
+			if (!temp.empty()) {
+				myStack.push(temp.top());
+				temp.pop();
+			}
+		}
+		else if (str[i] == '-') {
+			if (myStack.empty() && temp.empty())
+				continue;
+			else if (myStack.empty() && !temp.empty()) {
+
+			}
+			else
+				myStack.pop();
+		}
+		else {
+			myStack.push(str[i]);
+		}
+	}
+	while (!temp.empty()) {
+		myStack.push(temp.top());
+		temp.pop();
+	}
+	string result = "";
+	while (!myStack.empty()) {
+		result += myStack.top();
+		myStack.pop();
+	}
+
+	cout << ReverseString(result, result.length()) << endl;
+
+	return;
+}
+
+int main() {
+	int n;
+	cin >> n;
+	string input;
+
+	for (int i = 0; i < n; i++) {
+		cin >> input;
+		solve(input);
 	}
 	return 0;
 }
