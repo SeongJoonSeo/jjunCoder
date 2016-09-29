@@ -37,22 +37,32 @@ int main() {
 			inputs[i] = atof(inputStr.c_str());
 		}
 	}
-	vector<float> maxVec;
+
+	int startIdx = 0 , endIdx;
+	map<float, pair<int, int> > maxMap;
+
+	//vector<float> maxVec;
 	bool currentlyNegative = false;
 	float maxi = 1;//empty set case.
 	for (int i = 0; i < n; i++) {
-		if (inputs[i] >= 1 )
+		if (inputs[i] >= 1) {
 			maxi *= inputs[i];
+		}
 		else if (inputs[i] > 0 && inputs[i] < 1) {
 			//greator than zero and less than one.
 			//then,can be no more maximum value.
-			maxVec.push_back(maxi);//save our previous maximum value;
+			endIdx = i;
+			pair<float, pair<int, int> > p(maxi, make_pair(startIdx, endIdx));
+			maxMap.insert(p);//save our previous maximum value;			
 			maxi *= inputs[i];
 		}
 		else if (inputs[i] == 0) {
 			//zero. our maxi value cannot be greator than 1.
-			maxVec.push_back(maxi);//save our previous maximum value;
+			endIdx = i;
+			pair<float, pair<int, int> > p(maxi, make_pair(startIdx, endIdx));
+			maxMap.insert(p);//save our previous maximum value;
 			maxi = 1;
+			startIdx = i;
 		}
 		else {
 			if (currentlyNegative) {
