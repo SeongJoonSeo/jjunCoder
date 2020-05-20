@@ -6,45 +6,55 @@
 
 using namespace std;
 
+int n;
+
+bool isIn(int idx)
+{
+    return 0 <= idx && idx < n;
+}
+
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
-    int n, m;
+    int m;
     cin >> n;
-    vector<int> vec(n), psum(n, 0);
-    int sum = 0;
-    for (int i = 0; i < n; i++)
+    vector<int> vec(n + 1), psum(n + 1, 0);
+    vector<int> dp[3];
+    for (int i = 0; i < 3; i++)
+        dp[i].assign(n + 1, 0);
+
+    for (int i = 1; i <= n; i++)
     {
         cin >> vec[i];
-        sum += vec[i];
-        psum[i] = sum;
+        psum[i] = psum[i - 1] + vec[i];
     }
     cin >> m;
 
-    int totsum = -1;
-    for (int l1 = 0; l1 + m <= n - m - m; l1++)
+    for (int train_num = 0; train_num < 3; train_num++)
     {
-        int r1 = l1 + m;
-        int sum1 = 0;
-        if (l1 == 0)
-            sum1 = psum[r1 - 1];
-        else
-            sum1 = psum[r1 - 1] - psum[l1 - 1];
-        for (int l2 = r1; l2 + m <= n - m; l2++)
+        dp[train_num][0] = vec[0];
+    }
+
+    for (int train_num = 0; train_num < 3; train_num++)
+    {
+        for (int i = 2; i <= n; i++)
         {
-            int r2 = l2 + m;
-            int sum2 = psum[r2 - 1] - psum[l2 - 1];
-            for (int l3 = r2; l3 + m <= n; l3++)
-            {
-                int r3 = l3 + m;
-                int sum3 = psum[r3 - 1] - psum[l3 - 1];
-                totsum = max(totsum, sum1 + sum2 + sum3);
-            }
+            // 지금 소형 기관차 이전의 소형 기관차가
+            // i-m번째 화물칸까지 최대로 선택한 수
+            // + 지금 소형 기관차가 (i-m+1 ~ i)번째 까지 태운 승객 수
+            int prev = 0;
+            if (train_num - 1 >= 0 && isIn(i - m))
+                prev = dp[train_num - 1][i - m];
+            if (isIn(i - m))
+                prev += psum[i] - psum[i - m];
+            dp[train_num][i] = max(dp[train_num][i - 1], prev);
         }
     }
-    cout << totsum << endl;
+
+    cout << dp[2][n] << endl;
+
     return 0;
 }
