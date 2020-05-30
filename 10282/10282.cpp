@@ -1,9 +1,9 @@
 // BOJ 10282번: 해킹
-#include <iostream>
-#include <string>
 #include <algorithm>
-#include <vector>
+#include <iostream>
 #include <queue>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -13,16 +13,14 @@ typedef pair<int, int> II;
 #define COUNT second
 #define INF 987654321
 
-II dijkstra(int src, int n, vector<II> *graph)
-{
+II dijkstra(int src, int n, vector<II> *graph) {
     int lastV = src;
     II result = {0, 0};
     priority_queue<II, vector<II>, greater<II>> pq;
     vector<int> dist(n + 1, INF);
     dist[src] = 0;
     pq.push({0, src});
-    while (!pq.empty())
-    {
+    while (!pq.empty()) {
         int cost = pq.top().COST;
         int here = pq.top().VERTEX;
         pq.pop();
@@ -30,12 +28,10 @@ II dijkstra(int src, int n, vector<II> *graph)
             continue;
         result.COUNT++;
         lastV = here;
-        for (int i = 0; i < graph[here].size(); i++)
-        {
+        for (int i = 0; i < graph[here].size(); i++) {
             int there = graph[here][i].VERTEX;
             int nextCost = graph[here][i].COST + dist[here];
-            if (nextCost < dist[there])
-            {
+            if (nextCost < dist[there]) {
                 dist[there] = nextCost;
                 pq.push({nextCost, there});
             }
@@ -46,21 +42,18 @@ II dijkstra(int src, int n, vector<II> *graph)
     return result;
 }
 
-int main()
-{
+int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
     int t;
     cin >> t;
-    while (t--)
-    {
+    while (t--) {
         int n, d, c;
         cin >> n >> d >> c;
         vector<II> graph[n + 1];
-        for (int i = 0; i < d; i++)
-        {
+        for (int i = 0; i < d; i++) {
             int a, b, s;
             cin >> a >> b >> s;
             graph[b].push_back({s, a});
