@@ -84,10 +84,10 @@ void solution() {
                 continue;
             char boardItem = board[nr][nc];
             if ('a' <= boardItem && boardItem <= 'f') {
-                int nextKey = getKey(key, int(boardItem - 'a'));
+                int nextKey = getKey(key, boardItem - 'a');
                 visited[nextKey][nr][nc] = true;
                 q.push({{nr, nc}, {move + 1, nextKey}});
-            } else if (('A' <= boardItem && boardItem <= 'F' && hasKey(key, int(boardItem - 'A'))) || boardItem == '.') {
+            } else if (('A' <= boardItem && boardItem <= 'F' && hasKey(key, boardItem - 'A')) || boardItem == '.') {
                 visited[key][nr][nc] = true;
                 q.push({{nr, nc}, {move + 1, key}});
             } else if (boardItem == '1') {

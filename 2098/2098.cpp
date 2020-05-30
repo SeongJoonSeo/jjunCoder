@@ -41,20 +41,24 @@ void solve() {
     cout << travel(0, 1) << endl;
 }
 
+bool isVisited(int visited, int next) {
+    return visited & (1 << next);
+}
+
 int travel(int cur, int visited) {
     if (visited == visitedAll) {
         if (graph[cur][0])
             return graph[cur][0];
         else
-            return 1000000000;
+            return INF;
     }
     int &ret = dp[cur][visited];
     if (ret != 0) return ret;
 
-    ret = 1000000000;
-    for (int next = 0; next < n; next++) {
-        if (((visited & (1 << next)) == 0) && graph[cur][next] != 0)
-            ret = min(ret, travel(next, (visited | (1 << next))) + graph[cur][next]);
+    ret = INF;
+    for (int next = 1; next < n; next++) {
+        if (!isVisited(visited, next) && graph[cur][next] != 0)
+            ret = min(ret, travel(next, visited | (1 << next)) + graph[cur][next]);
     }
 
     return ret;
